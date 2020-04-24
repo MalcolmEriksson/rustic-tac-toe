@@ -32,20 +32,10 @@ impl App {
     }
 
     pub fn run(mut self) {
+        println!("{}", self.game.board);
         loop {
-            println!("{}", self.game.board);
-            match self.board_checker.check(&self.game.board, &self.player_x, &self.player_o) {
-                ScoreState::Won(player) => {
-                    println!("Player: {} won!", player.name);
-                    break;
-                },
-                ScoreState::Tie => {
-                    println!("The game ended in a tie!");
-                    break;
-                },
-                ScoreState::Continue => ()
-            }
             let last_move = get_move_input(&self.game.current_player);
+            let last_coord = last_move.0.clone();
             match self.game.board.clone().add_marker(last_move.0, last_move.1) {
                 (board, true) => {
                     self.game.board = board;
@@ -58,6 +48,19 @@ impl App {
                 (_, false) => {
                     println!("Illegal move, coordinate already populated");
                 }
+            }
+            println!("{}", self.game.board);
+
+            match self.board_checker.check(&self.game.board, &self.player_x, &self.player_o, &last_coord) {
+                ScoreState::Won(player) => {
+                    println!("Player: {} won!", player.name);
+                    break;
+                },
+                ScoreState::Tie => {
+                    println!("The game ended in a tie!");
+                    break;
+                },
+                ScoreState::Continue => ()
             }
         }
     }

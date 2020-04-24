@@ -28,7 +28,7 @@ impl Point for (usize, usize) {
     }
 }
 
-#[derive(PartialEq, Eq, Hash, Debug)]
+#[derive(PartialEq, Eq, Hash, Debug, Clone)]
 pub struct Coord(pub usize, pub usize);
 
 impl Coord {

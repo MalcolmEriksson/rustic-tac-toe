@@ -2,7 +2,7 @@
 use {
     crate::board::Board,
     crate::player::Player,
-    crate::util::{Marker, BOARD_SIZE}
+    crate::util::{Marker, BOARD_SIZE, Coord}
 };
 
 pub enum ScoreState {
@@ -12,14 +12,14 @@ pub enum ScoreState {
 }
 
 pub trait BoardChecker {
-    fn check(&self, board: &Board, player_x: &Player, player_o: &Player) -> ScoreState;
+    fn check(&self, board: &Board, player_x: &Player, player_o: &Player, last_coord: &Coord) -> ScoreState;
 }
 
 pub struct DefaultChecker;
 
 
 impl BoardChecker for DefaultChecker {
-    fn check(&self, board: &Board, player_x: &Player, player_o: &Player) -> ScoreState {
+    fn check(&self, board: &Board, player_x: &Player, player_o: &Player, last_coord: &Coord) -> ScoreState {
         match (self.crossed(board), self.column(board), self.row(board), self.full_board(board)) {
             (Some(marker), _, _, _) | (_, Some(marker), _, _) | (_, _, Some(marker), _) => ScoreState::Won(if player_x.marker == marker { player_x.clone() } else { player_o.clone() }),
             (_, _, _, true) => ScoreState::Tie,
